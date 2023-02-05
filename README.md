@@ -6,7 +6,7 @@
 1) g++ -g *.cpp -o my_prog
 2) gdb my_prog
 
-# Smart Algorithm Idea;
+### Smart Algorithm Idea;
 - The algorithm has two objectives: 1) discover the entire layout of the house as efficiently as possible and 2) clean the house completely.
 - To achieve #1, visiting spaces in DFS manner likely prevails over BFS, because BFS requires a significant amount of backtracking.
   As the robot moves around the house in DFS manner, keep track of visited spaces and dirt level. 
