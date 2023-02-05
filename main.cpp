@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
     if(argc < 2) 
     {
         cout << "Too few arguments.";
+        return -1;
     }
     input_file = argv[1];
     

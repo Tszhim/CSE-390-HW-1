@@ -1,6 +1,6 @@
 #include <utility>      /* To use pairs. Pairs will be of type <int, int> to represent coordinate of a particular location, relative to the charging dock.*/
+#include "output.h"
 #include "direction.h"
-using namespace std;
 
 /* Writes current step made by robot into output file. Return 0 if successful, otherwise -1. */
 int write_step(Direction dir, pair<int, int> new_space) 
