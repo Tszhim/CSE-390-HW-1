@@ -1,5 +1,3 @@
-/* Implements all functions for robot class declared in Mission namespace. */
-
 /* 
     The two configurations the robot will have (battery size and mission budget) should be the first two lines in the input file.
 

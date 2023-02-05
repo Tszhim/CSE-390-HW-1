@@ -1,5 +1,3 @@
-/* Implements all functions for house class declared in Mission namespace. */
-
 /*
    Let the format of the house follow the below rules: 
    If valid space: denote with numeric value from 0-9.

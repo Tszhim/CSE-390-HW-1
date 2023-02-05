@@ -30,8 +30,8 @@ int main(int argc, char* argv[])
     /* Begin mission. */
     while(1) 
     {
-        /* Ask algorithm what queries it wants to make. Pass results onto algorithm. */
-
+        /* Update algorithm with fresh data after previous move. */
+        
         /* Ask algorithm for next move. */
 
         /* Call move() on robot with calculated move. */
