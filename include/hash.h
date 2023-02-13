@@ -2,7 +2,8 @@
 #define HASH_H
 
 #include <utility> 
-using namespace std;
+
+using std::size_t, std::pair;
 
 /* 
     Hashing function for use in house class. 

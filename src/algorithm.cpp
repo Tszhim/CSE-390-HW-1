@@ -8,7 +8,7 @@ Algorithm::Algorithm() {}
 /*
     Sets whether the wall north of current position is a wall. 
 */
-void Algorithm::set_wall_north(int w) 
+void Algorithm::set_wall_north(const bool w) 
 {
 
 }
@@ -16,7 +16,7 @@ void Algorithm::set_wall_north(int w)
 /*
     Sets whether the wall west of current position is a wall.
 */
-void Algorithm::set_wall_west(int w) 
+void Algorithm::set_wall_west(const bool w) 
 {
 
 }
@@ -24,7 +24,7 @@ void Algorithm::set_wall_west(int w)
 /*
     Sets whether the wall south of current position is a wall.
 */
-void Algorithm::set_wall_south(int w) 
+void Algorithm::set_wall_south(const bool w) 
 {
 
 }
@@ -32,7 +32,7 @@ void Algorithm::set_wall_south(int w)
 /*
     Sets whether the wall east of current position is a wall.
 */
-void Algorithm::set_wall_east(int w) 
+void Algorithm::set_wall_east(const bool w) 
 {
 
 }
@@ -40,7 +40,7 @@ void Algorithm::set_wall_east(int w)
 /*
     Sets the amount of dirt at current position.
 */
-void Algorithm::set_dirt(int d) 
+void Algorithm::set_dirt(const int d) 
 {
 
 }
@@ -48,7 +48,7 @@ void Algorithm::set_dirt(int d)
 /* 
     Sets the amount of battery the robot currently has.
 */
-void Algorithm::set_battery(int b) 
+void Algorithm::set_battery(const int b) 
 {
 
 }
@@ -60,4 +60,3 @@ Direction get_move()
 {
 
 }
-

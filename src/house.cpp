@@ -32,9 +32,9 @@
 House::House() {}
 
 /* 
-    Attempts to instantiate house object fields. Return 0 on success, else -1. 
+    Attempts to instantiate house object fields. Return true on success, else false.
 */
-int House::house_setup(string input_file) 
+bool House::house_setup(const string input_file) 
 {
     if((validate_house(input_file)) == -1) 
     {
@@ -48,25 +48,25 @@ int House::house_setup(string input_file)
 }
 
 /*
-    Read input file, if I/O error or if denoted house does not follow aforementioned format (e.g. unknown characters such as ?, !, @) or if denoted house is not a connected graph, return -1. Otherwise, return 0.
+    Read input file, if I/O error or if denoted house does not follow aforementioned format (e.g. unknown characters such as ?, !, @), return false. Otherwise, return true.
 */
-int House::validate_house(string input_file)
+bool House::validate_house(const string input_file)
 {
 
 }
 
 /* 
-    Extract relevant house data from input file and instantiate house object fields. 
+    Extract relevant house data from input file and instantiate house object fields. Return true on success, else false.
 */
-int House::store_house_info(string input_file)
+bool House::store_house_info(const string input_file)
 {
 
 }
 
 /*
-    Check if provided coordinate is a valid space within the house (i.e. not a wall). Return 0 if valid, otherwise -1. 
+    Check if provided coordinate is a valid space within the house (i.e. not a wall). Return true if valid, otherwise false.
 */
-int House::is_valid_space(pair<int, int> space) 
+bool House::is_valid_space(const pair<int, int> space) 
 {
 
 }
@@ -90,7 +90,7 @@ int House::get_total_dirt()
 /*
     Check if the house is completely clean (i.e. no dirt left). Return 0 is clean, otherwise -1.
 */
-int House::is_house_clean() 
+bool House::is_house_clean() 
 {
 
 }
@@ -98,6 +98,7 @@ int House::is_house_clean()
 /*
     Cleans a particular space in the house (i.e. decrement dirt level). 
 */
-void House::clean_space(pair<int, int> space) {
+void House::clean_space(const pair<int, int> space) 
+{
 
 }

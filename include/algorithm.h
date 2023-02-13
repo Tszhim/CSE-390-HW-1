@@ -2,21 +2,20 @@
 #define ALGORITHM_H
 
 #include <stack>
-#include <queue>
-#include <unordered_set>
-#include <utility>       /* To use pairs. Pairs will be of type <int, int> to represent coordinate of a particular location, relative to the charging dock.*/
+#include <utility>     
 #include "direction.h"
 #include "hash.h"
-using namespace std;
+
+using std::stack, std::pair;
 
 class Algorithm 
 {   
-    int wall_north;  /* 0 if there is a wall north, -1 if there is no wall north. */
-    int wall_west;   /* 0 if there is a wall west, -1 if there is no wall west. */
-    int wall_south;  /* 0 if there is a wall south, -1 if there is no wall south. */
-    int wall_east;   /* 0 if there is a wall east. -1 if there is no wall east. */
-    int dirt;        /* Dirt level of current location. */
-    int battery;     /* Battery of robot. */
+    bool wall_north;  /* if there is a wall north  */
+    bool wall_west;   /* 0 if there is a wall west, -1 if there is no wall west. */
+    bool wall_south;  /* 0 if there is a wall south, -1 if there is no wall south. */
+    bool wall_east;   /* 0 if there is a wall east. -1 if there is no wall east. */
+    int dirt;         /* Dirt level of current location. */
+    int battery;      /* Battery of robot. */
     
     // Naive algorithm. 
     stack<pair<int, int>> path_stack;                            /* Each time the robot moves away from the charging port, the algorithm tracks the entire path it traverses. Push a pair when moving forward, pop a pair when moving backward. */
@@ -32,12 +31,12 @@ class Algorithm
         Algorithm();
 
         /* Setters for "querying" data. Called in main(). */
-        void set_wall_north(int w);
-        void set_wall_west(int w);
-        void set_wall_south(int w);
-        void set_wall_east(int w);
-        void set_dirt(int d);
-        void set_battery(int b);
+        void set_wall_north(const bool w);
+        void set_wall_west(const bool w);
+        void set_wall_south(const bool w);
+        void set_wall_east(const bool w);
+        void set_dirt(const int d);
+        void set_battery(const int b);
 
         /* Primary function of the class. */
         Direction get_move();

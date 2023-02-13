@@ -4,7 +4,8 @@
 #include <string>
 #include <utility>      /* To use pairs. Pairs will be of type <int, int> to represent coordinate of a particular location, relative to the charging dock.*/
 #include "direction.h"
-using namespace std;
+
+using std::pair, std::pair, std::string;
 
 class Robot 
 {   
@@ -19,24 +20,24 @@ class Robot
 
 public:
     /* Constructor. */
-    Robot(pair<int, int> starting_space);
+    Robot(const pair<int, int> starting_space);
 
     /* Calls private functions for instantiation of object fields. */
-    int robot_setup(string input_file);
+    bool robot_setup(const string input_file);
     
     /* Does not alter robot data. */
     int get_battery_left();
     pair<int, int> get_robot_loc();
 
     /* Alters robot data. */
-    void move(Direction dir);
+    void move(const Direction dir);
     void decrement_battery();
     void finished_charge();
 
 private:
     /* Reads input file to extract information about robot configurations. */
-    int validate_robot(string input_file);
-    int store_robot_info(string input_file);
+    bool validate_robot(const string input_file);
+    bool store_robot_info(const string input_file);
 };  
 
 #endif

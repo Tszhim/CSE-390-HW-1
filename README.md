@@ -1,10 +1,12 @@
-### To compile and run. 
-1) g++ -o my_prog *.cpp
-2) ./my_prog
+# To compile and run. 
+1) make clean
+2) make
+3) ./bin/main
 
-### To debug.
-1) g++ -g *.cpp -o my_prog
-2) gdb my_prog
+# To debug.
+1) make clean
+2) make debug
+3) gdb ./bin/main
 
 ### Smart Algorithm Idea;
 - The algorithm has two objectives: 1) discover the entire layout of the house as efficiently as possible and 2) clean the house completely.

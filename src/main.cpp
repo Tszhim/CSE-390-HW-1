@@ -4,7 +4,8 @@
 #include "house.h"
 #include "robot.h"
 #include "output.h"
-using namespace std;
+
+using std::string, std::cout;
 
 string input_file;
 int mission_success;

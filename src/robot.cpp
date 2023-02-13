@@ -18,15 +18,15 @@
 /* 
     Constructor for robot class. Takes one parameter: starting location (i.e. charging dock). 
 */
-Robot::Robot(pair<int, int> starting_space) 
+Robot::Robot(const pair<int, int> starting_space) 
 {
     space = starting_space;
 }
 
 /* 
-    Attempts to instantiate robot object fields. Return 0 on success, else -1. 
+    Attempts to instantiate robot object fields. Return true on success, otherwise false.
 */
-int Robot::robot_setup(string input_file) 
+bool Robot::robot_setup(const string input_file) 
 {
     if((validate_robot(input_file) == -1)) 
     {
@@ -40,17 +40,17 @@ int Robot::robot_setup(string input_file)
 }
 
 /* 
-    Read input file, if I/O error or if provided battery size and mission budget is not a numeric value, return -1. Otherwise, return 0. 
+    Read input file, if I/O error or if provided battery size and mission budget is not a numeric value, return false. Otherwise, return true.
 */
-int Robot::validate_robot(string input_file) 
+bool Robot::validate_robot(const string input_file) 
 {
 
 }
 
 /* 
-    Extract relevant robot data from input file and instantiate robot object fields. Return 0 if successful, otherwise return -1. 
+    Extract relevant robot data from input file and instantiate robot object fields. Return true on success, otherwise false. 
 */
-int Robot::store_robot_info(string input_file) 
+bool Robot::store_robot_info(const string input_file) 
 {
     
 }
@@ -74,7 +74,7 @@ pair<int, int> Robot::get_robot_loc()
 /*
     Perform movement to new location depending on given direction.
 */
-void Robot::move(Direction dir) 
+void Robot::move(const Direction dir) 
 {
 
 }
