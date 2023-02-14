@@ -13,46 +13,60 @@
     X X X X X X X X
 */
 
+#include <iostream>
+#include <fstream> 
+#include <string>
 #include "robot.h"
 
+using std::string, std::ifstream, std::getline, std::stoi, std::invalid_argument, std::out_of_range;
+
 /* 
-    Constructor for robot class. Takes one parameter: starting location (i.e. charging dock). 
+    Constructor for robot class, no parameters.
 */
-Robot::Robot(const pair<int, int> starting_space) 
+Robot::Robot() 
 {
-    space = starting_space;
+    space = pair(0, 0);
+    steps = 0;
+    charging_status = 1;
+    charging_length = 0;
 }
 
 /* 
     Attempts to instantiate robot object fields. Return true on success, otherwise false.
 */
-bool Robot::robot_setup(const string input_file) 
+bool Robot::robot_setup(const string infile_name) 
 {
-    if((validate_robot(input_file) == -1)) 
-    {
-        return -1;
-    }
-    if((store_robot_info(input_file) == -1)) 
-    {
-        return -1;
-    }
-    return 0;
+    ifstream file = ifstream(infile_name);
+    return !file.fail() && store_robot_info(file);
 }
 
 /* 
-    Read input file, if I/O error or if provided battery size and mission budget is not a numeric value, return false. Otherwise, return true.
+    Extract relevant robot data from input file and instantiate robot object fields. If the provided battery size and mission budget is not a numeric value, return false. Return true on success, otherwise false. 
 */
-bool Robot::validate_robot(const string input_file) 
-{
+bool Robot::store_robot_info(ifstream& file) 
+{   
+    string str;
+    if (!getline(file, str))
+        return false;
 
-}
+    try
+    {
+        battery_size = battery_left = stoi(str);
+    }
+    catch (invalid_argument&) {return false;} 
+    catch (out_of_range&) {return false;}
 
-/* 
-    Extract relevant robot data from input file and instantiate robot object fields. Return true on success, otherwise false. 
-*/
-bool Robot::store_robot_info(const string input_file) 
-{
+    if (!getline(file, str))
+        return false;
     
+    try 
+    {
+        mission_budget = stoi(str);
+    }
+    catch (invalid_argument&) {return false;} 
+    catch (out_of_range&) {return false;}
+
+    return true;
 }
 
 /*
@@ -60,7 +74,7 @@ bool Robot::store_robot_info(const string input_file)
 */
 int Robot::get_battery_left() 
 {
-
+    return battery_left;
 }
 
 /*
@@ -68,23 +82,61 @@ int Robot::get_battery_left()
 */
 pair<int, int> Robot::get_robot_loc() 
 {
-
+    return space;
 }
 
 /*
-    Perform movement to new location depending on given direction.
+    Perform movement to new location depending on given direction. Note that this function does not check for out of bounds movement, as it is contingent on main() and thereby the algorithm class to operate correctly.
 */
 void Robot::move(const Direction dir) 
-{
+{   
+    bool docked_before = space.first == 0 && space.second == 0;
+    bool docked_after;
+    bool enter_dock, stay_docked, leave_dock;
 
+    /* Sanity check. */
+    if (battery_left <= 0 || steps >= mission_budget)
+        return;
+
+    /* Recalculate space. */
+    if(dir == North)
+        space.second += 1;
+    if(dir == West)
+        space.first -= 1;
+    if(dir == South)
+        space.second -= 1;
+    if(dir == East)
+        space.first += 1;
+    // Do nothing if stasis.
+    
+    /* Evaluate action taken. */
+    docked_after = space.first == 0 && space.second == 0;
+    enter_dock = !docked_before && docked_after;
+    stay_docked = docked_before && docked_after;
+    leave_dock = docked_before && !docked_after;
+    
+    /* Update attributes accordingly. */
+    if(enter_dock)        
+        start_charge();
+    if(stay_docked)       
+        charge();
+    if(leave_dock)         
+        finished_charge();
+
+    steps++;
+    battery_left = stay_docked ? battery_left : battery_left - 1;   // Don't decrement battery if staying on charging dock.
 }
 
-/*
-    Reduce battery by one.
-*/
-void Robot::decrement_battery() 
+/* Reflect charging state. */
+void Robot::start_charge() 
 {
+    charging_status = true;
+}
 
+/* Reflect one additional "step" of charging. */
+void Robot::charge()
+{
+    charging_length++;
 }
 
 /*
@@ -92,6 +144,9 @@ void Robot::decrement_battery()
     (the amount of battery steps when getting onto the docking station) + (number of steps staying on the docking station) * (battery_size / 20)
 */
 void Robot::finished_charge() 
-{
-
+{   
+    int new_battery = battery_left + charging_length * (battery_size / 20);
+    battery_left = new_battery <= battery_size ? new_battery : battery_size;
+    charging_status = false;
+    charging_length = 0;
 }   
