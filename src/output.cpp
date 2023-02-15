@@ -7,6 +7,21 @@
 
 using std::ofstream, std::endl, std::ios;
 
+
+/*
+    Separates the result output from the robot movement output. Return true if successful, otherwise false.
+*/
+bool write_output_header() 
+{
+    ofstream file = ofstream(OUTPUT_FILE, ios::app);
+    if(file.fail()) 
+        return false;
+    
+    file << "Results: " << endl;
+    file << "-----------------------" << endl;  
+    return true;
+}
+
 /* 
     Writes current step made by robot into output file. Return true if successful, otherwise false. 
 */

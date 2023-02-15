@@ -10,12 +10,14 @@ using std::stack, std::pair;
 
 class Algorithm 
 {   
-    bool wall_north;  /* if there is a wall north  */
-    bool wall_west;   /* 0 if there is a wall west, -1 if there is no wall west. */
-    bool wall_south;  /* 0 if there is a wall south, -1 if there is no wall south. */
-    bool wall_east;   /* 0 if there is a wall east. -1 if there is no wall east. */
-    int dirt;         /* Dirt level of current location. */
-    int battery;      /* Battery of robot. */
+    bool wall_north;                /* if there is a wall north  */
+    bool wall_west;                 /* 0 if there is a wall west, -1 if there is no wall west. */
+    bool wall_south;                /* 0 if there is a wall south, -1 if there is no wall south. */
+    bool wall_east;                 /* 0 if there is a wall east. -1 if there is no wall east. */
+    pair<int, int> space;           /* Current location of robot, maintained by algorithm. */
+    int dirt;                       /* Dirt level of current location. */
+    int battery;                    /* Battery of robot. */
+    int charging_length;            /* Duration spent on charging dock. */
     
     // Naive algorithm. 
     stack<pair<int, int>> path_stack;                            /* Each time the robot moves away from the charging port, the algorithm tracks the entire path it traverses. Push a pair when moving forward, pop a pair when moving backward. */

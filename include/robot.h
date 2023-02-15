@@ -29,7 +29,10 @@ public:
     
     /* Does not alter robot data. */
     int get_battery_left();
+    int get_total_steps();
     pair<int, int> get_robot_loc();
+    bool on_charging_dock();
+    bool budget_exceeded();
 
     /* Alters robot data. */
     void move(const Direction dir);

@@ -78,6 +78,14 @@ int Robot::get_battery_left()
 }
 
 /*
+    Returns total number of steps robot has moved throughout entire mission duration.
+*/
+int Robot::get_total_steps()
+{
+    return steps;
+}
+
+/*
     Returns location of robot within the house.
 */
 pair<int, int> Robot::get_robot_loc() 
@@ -86,17 +94,36 @@ pair<int, int> Robot::get_robot_loc()
 }
 
 /*
+    Returns true if robot is on charging dock (i.e. 0,0), otherwise false.
+*/
+bool Robot::on_charging_dock()
+{
+    return space.first == 0 && space.second == 0;
+}
+
+/*
+    Returns true if budget exceeded (i.e. steps > mission_budget), otherwise false.
+*/
+bool Robot::budget_exceeded()
+{
+    return steps >= mission_budget;
+}
+
+/*
     Perform movement to new location depending on given direction. Note that this function does not check for out of bounds movement, as it is contingent on main() and thereby the algorithm class to operate correctly.
 */
 void Robot::move(const Direction dir) 
 {   
-    bool docked_before = space.first == 0 && space.second == 0;
+    bool docked_before = on_charging_dock();
     bool docked_after;
     bool enter_dock, stay_docked, leave_dock;
 
     /* Sanity check. */
-    if (battery_left <= 0 || steps >= mission_budget)
+    if((battery_left <= 0 && !docked_before) || budget_exceeded())
+    {
+        steps++;
         return;
+    }
 
     /* Recalculate space. */
     if(dir == North)
@@ -107,10 +134,11 @@ void Robot::move(const Direction dir)
         space.second -= 1;
     if(dir == East)
         space.first += 1;
+
     // Do nothing if stasis.
     
     /* Evaluate action taken. */
-    docked_after = space.first == 0 && space.second == 0;
+    docked_after = on_charging_dock();
     enter_dock = !docked_before && docked_after;
     stay_docked = docked_before && docked_after;
     leave_dock = docked_before && !docked_after;

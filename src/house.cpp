@@ -125,6 +125,21 @@ bool House::is_valid_space(const pair<int, int> space)
 }
 
 /*
+    Returns amount of dirt for a particular space. If the space provided is invalid, return 0.
+*/
+int House::get_dirt(const pair<int, int> space) 
+{
+    unordered_map<pair<int, int>, int>::iterator it = dirt_lvl.find(space);
+
+    /* If space exists and dirt level of space > 0. */
+    if(it != dirt_lvl.end() && it->second > 0) 
+    {
+        return it->second;
+    }
+    return 0;
+}
+
+/*
     Returns total amount of dirt left in the house.
 */
 int House::get_total_dirt() 

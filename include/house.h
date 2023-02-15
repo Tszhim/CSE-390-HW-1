@@ -26,6 +26,7 @@ public:
 
     /* Does not alter house data.*/
     bool is_valid_space(const pair<int, int> space); 
+    int get_dirt(const pair<int, int> space);
     int get_total_dirt();
     bool is_house_clean();
 
