@@ -8,6 +8,9 @@
 2) make debug
 3) gdb ./bin/main
 
+### To run tests.
+1) ./test_script.sh
+
 ### Smart Algorithm Idea:
 - The algorithm has two objectives: 1) discover the entire layout of the house as efficiently as possible and 2) clean the house completely.
 - To achieve #1, visiting spaces in DFS manner likely prevails over BFS, because BFS requires a significant amount of backtracking.
