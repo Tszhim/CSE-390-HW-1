@@ -116,6 +116,8 @@ bool Robot::budget_exceeded()
 */
 void Robot::move(const Direction dir) 
 {   
+    int new_battery;
+    
     /* Ensures mission will end. */
     steps++;
 
@@ -134,7 +136,10 @@ void Robot::move(const Direction dir)
         space.first += 1;
     // Do nothing if stasis.
 
-    /* Check if new position is charging dock. If so, charge the robot. */
+    /* Check if new position is charging dock. If so, charge the robot. Charge cannot exceed max battery capacity. */
     if(on_charging_dock())
-        battery_left = battery_left + (battery_size / 20);
+    {
+        new_battery = battery_left + (battery_size / 20);
+        battery_left = (new_battery > battery_size) ? battery_size : new_battery;
+    }
 }
