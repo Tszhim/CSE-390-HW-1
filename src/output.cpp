@@ -1,11 +1,43 @@
 #include <iostream>
 #include <fstream> 
 #include <string>
-#include <utility>      /* To use pairs. Pairs will be of type <int, int> to represent coordinate of a particular location, relative to the charging dock.*/
+#include <utility> 
 #include "output.h"
 #include "direction.h"
 
-using std::ofstream, std::endl, std::ios;
+using std::ifstream, std::ofstream, std::endl, std::ios, std::pair;
+
+/*
+    Setup output file for mission by clearing if it exists, and creating if not. Return true if successful, otherwise false.
+*/
+bool setup_output()
+{
+    ifstream in;
+    ofstream out;
+
+    /* Output file already exists, attempt to remove. */
+    in = ifstream(OUTPUT_FILE);
+    if(!in.fail() && remove(OUTPUT_FILE))    
+        return false;
+
+    /* Create output file.*/
+    out = ofstream(OUTPUT_FILE, ios::out);
+    return !out.fail();
+}
+
+/*
+    Separates the result output from the robot movement output. Return true if successful, otherwise false.
+*/
+bool write_output_header() 
+{
+    ofstream file = ofstream(OUTPUT_FILE, ios::app);
+    if(file.fail()) 
+        return false;
+    
+    file << "Results: " << endl;
+    file << "-----------------------" << endl;  
+    return true;
+}
 
 /* 
     Writes current step made by robot into output file. Return true if successful, otherwise false. 
