@@ -9,8 +9,11 @@ using std::stack, std::pair, std::string, std::random_device, std::mt19937, std:
 */
 Algorithm::Algorithm()
 {
+    wall_north = wall_west = wall_south = wall_east = true;
     space = pair(0,0);
-    charging_length = 0;
+    dirt = 0;
+    battery_left = 0;
+    battery_size = -1;
 }
 
 /*
@@ -58,14 +61,22 @@ void Algorithm::set_dirt(const int d)
 */
 void Algorithm::set_battery(const int b) 
 {
-    battery = b;
+    battery_left = b;
+}
+
+/*
+    Returns true if robot is on charging dock (i.e. 0,0), otherwise false.
+*/
+bool Algorithm::on_charging_dock()
+{
+    return space.first == 0 && space.second == 0;
 }
 
 /*
     Bulk of the algorithm. Returns the direction the robot should move next.
 */
 Direction Algorithm::get_move()
-{
+{   
     pair<int, int> prev_space;
     pair<int, int> next_space;
     string rand_str;
@@ -73,27 +84,19 @@ Direction Algorithm::get_move()
     random_device rd;
     mt19937 eng = mt19937(rd());
     uniform_int_distribution<> dist;
-    
-    /* If the robot is on the charging dock, allow 5 steps of charging before leaving (hardcoded). */
-    if(space.first == 0 && space.second == 0)
-    {
-        /* Keep charging. */
-        if(charging_length < 5)
-        {
-            charging_length++;
-            return Stasis;
-        }
-        /* Stop charging. Clear charging duration and path stack to start anew. */
-        else
-        {
-            charging_length = 0;
-            while(!path_stack.empty())
-                path_stack.pop();
-        }
-    }
+
+    /* First move. Maintain max battery for robot for later usage. */
+    if(battery_size = -1)
+        battery_size = battery_left;
+
+    /* If on charging dock and robot isn't fully charged, remaining on the dock to charge.*/
+    if(on_charging_dock() && battery_left != battery_size)
+        return Stasis;
 
     /* If robot has just enough battery to traverse back to charging dock, it MUST return. */
-    if(!path_stack.empty() && battery <= path_stack.size())
+    /* Note that moving forward one space will cost 1 battery step, and returning will cost another 1. */
+    /* Therefore, a battery buffer of 1 should be left open to return. */
+    if(!path_stack.empty() && battery_left - 1 <= path_stack.size())
     {
         prev_space = path_stack.top();
         path_stack.pop();
@@ -120,17 +123,17 @@ Direction Algorithm::get_move()
         }
     }
 
-    /* Otherwise, check if there is dirt at current spot. If there is dirt, stay in place and clean. */
-    if(dirt > 0)  
+    /* Robot still has enough battery for additional moves. */
+
+    /* If there is dirt at the current spot, stay in place and clean. */
+    if(dirt > 0)
         return Stasis;
-
-    /* If no dirt at current spot, pick a random direction to move that is not a wall. */
-
-    /* Blocked by wall on all sides, no move possible. */
+    
+    /* Sanity check: Blocked by wall on all sides, no move possible. */
     if(wall_north && wall_west && wall_south && wall_east) 
         return Stasis;
 
-    /* Move random direction. */
+    /* Generate a random possible direction to move. */
     rand_str = "";
     if (!wall_north) rand_str += "n";
     if (!wall_west) rand_str += "w";
@@ -139,72 +142,36 @@ Direction Algorithm::get_move()
     dist = uniform_int_distribution<>(0, rand_str.length() - 1);
     rand_dir = rand_str[dist(eng)];
 
-    /* If the next space is the same as the top item in the stack, pop the item. Otherwise, push the new space into the stack. */
+    /* Determine next space. */
     if(rand_dir == 'n')
-    {      
         next_space = pair(space.first, space.second + 1);
-        if(path_stack.empty())
-            path_stack.push(prev_space); 
-        else
-        {
-            prev_space = path_stack.top();
-            if (prev_space == next_space)
-                path_stack.pop();
-            else
-                path_stack.push(prev_space);
-        }
-        space.second++;
-        return North;
-    }
     if(rand_dir == 'w')
-    {
         next_space = pair(space.first - 1, space.second);
-        if(path_stack.empty())
-            path_stack.push(prev_space); 
-        else
-        {
-            prev_space = path_stack.top();
-            if (prev_space == next_space)
-                path_stack.pop();
-            else
-                path_stack.push(prev_space);
-        }
-        space.first--;
-        return West;
-    }
     if(rand_dir == 's')
-    {
         next_space = pair(space.first, space.second - 1);
-        if(path_stack.empty())
-            path_stack.push(prev_space); 
-        else
-        {
-            prev_space = path_stack.top();
-            if (prev_space == next_space)
-                path_stack.pop();
-            else
-                path_stack.push(prev_space);
-        };
-        space.second--;
-        return South;
-    }
     if(rand_dir == 'e')
-    {
         next_space = pair(space.first + 1, space.second);
-        if(path_stack.empty())
-            path_stack.push(prev_space); 
+
+    /* If stack is empty, push space before movement into stack to trace traversal. */
+    if(path_stack.empty())
+        path_stack.push(prev_space);
+    else
+    {
+        /* If the next space is the same as the top item in the stack, pop the item. */
+        /* If not, push space before movement into stack. */
+        prev_space = path_stack.top();
+        if(prev_space == next_space)
+            path_stack.pop();
         else
-        {
-            prev_space = path_stack.top();
-            if (prev_space == next_space)
-                path_stack.pop();
-            else
-                path_stack.push(prev_space);
-        }
-        space.first++;
-        return East;
+            path_stack.push(prev_space);
     }
 
-    /* Unexpected error. */
+    /* Finish up by updating position and returning direction. */
+    if(rand_dir == 'n') {space.second++; return North;}
+    if(rand_dir == 'w') {space.first--; return West;}
+    if(rand_dir == 's') {space.second--; return South;}
+    if(rand_dir == 'e') {space.first++; return East;}
+    
+    /* Unexpected error.*/
     return Stasis;
-}
+}   

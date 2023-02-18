@@ -1,25 +1,30 @@
 /*
    Let the format of the house follow the below rules: 
    If valid space: denote with numeric value from 0-9.
-   If wall: denote with X
-   If charging space: denote with O.
+   If wall: denote with "X" or " "
+   If charging space: denote with "O"
 
-   This format will be presented after the second line in the input file (spaces not included, present here only for readability).
+   This format will be presented after the second line in the input file.
 
    e.g.
-   X X X X X X X X
-   X 9 1 3 X 5 6 X
-   X 3 X 2 8 2 1 X
-   X 1 X O X X X X
-   X 0 3 1 4 6 X X
-   X X X X X X X X
 
-       X
-     X 9 X
-     X 1 2 3 X X X X X X X 
-   X O 3 5 1 3 4 6 7 8 X
-     X X X 8 1 4 7 2 1 X
-           X X X X X X
+   XXXXXXXX
+   X913X56X
+   X3X2821X
+   X1X0XXXX
+   XO3146XX
+   XXXXXXXX
+
+        X
+       X9X
+      X123XXXXXXX 
+     XO35134678X
+   XXX814721X
+      XXXXXX
+    
+   3456
+   93O1
+   5792
 
    Think of corridor spaces as a connected graph. Traversing the nodes is the primary objective.
 */
@@ -27,12 +32,19 @@
 #include <iostream>
 #include <fstream> 
 #include "house.h"
+
 using std::ifstream, std::string, std::getline, std::pair, std::unordered_map;
 
 /* 
-    Constructor for house class, no parameters. 
+    Constructor for house class, no parameters. Add charging dock to list of spaces by default with a dirt level of 0.
 */
-House::House() {}
+House::House() 
+{
+    pair p = pair(0, 0);
+    spaces.insert(p);
+    dirt_lvl.insert({p, 0});
+    total_dirt = 0;
+}
 
 /* 
     Attempts to instantiate house object fields. Return true on success, else false.
@@ -68,10 +80,10 @@ bool House::store_house_info(ifstream& file)
     /* First read for validation and locating charging dock. */
     while(getline(file, str)) 
     {   
-        if(str.find_first_not_of("0123456789XO") != string::npos)
+        if(str.find_first_not_of("0123456789XO ") != string::npos)
             return false;
         if(str.find('O') != string::npos) 
-        { 
+        {   
             if(dock_found)
                 return false;
             dock_found = true;
@@ -97,14 +109,16 @@ bool House::store_house_info(ifstream& file)
         for(int i = 0; i < str.length(); i++) 
         {
             c = str.at(i);
-            if(c != 'X' && c != 'O')
+        
+            /* If valid space, calculate relative coordinate to charging dock. */
+            if(c != 'X' && c != 'O' && c != ' ')
             {   
-                /* Calculate relative coordinate of space to charging dock. */
                 space_x = i - dock_idx;
                 space_y = dock_line - curr_line;
                 p = pair(space_x, space_y);
                 dirt = int(c) - '0';
                 
+                /* Store information about space into class attributes. */
                 spaces.insert(p);
                 dirt_lvl.insert({p, dirt});
                 dirt_counter += dirt;

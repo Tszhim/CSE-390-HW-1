@@ -36,6 +36,13 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    /* Setup output file for I/O. */
+    if(!setup_output())
+    {
+        cout << "Unable to setup output file due to I/O error." << endl;
+        return -1;
+    }
+
     /* Begin mission. */
     while(1) 
     {
@@ -60,7 +67,7 @@ int main(int argc, char* argv[])
         /* Call move() on robot with calculated move. */
         r.move(next_dir);
 
-        /* Clean space if stasis. No effect if charging dock or space fully cleaned. */
+        /* Clean space if stasis. No effect if current space is charging dock or is fully cleaned. */
         if(next_dir == Stasis)
             h.clean_space(r_loc);
 
@@ -87,7 +94,7 @@ int main(int argc, char* argv[])
     }   
 
     /* print general logs */
-    if(!write_step_count(r.get_total_steps()) || !write_dirt_count(h.get_total_dirt()) || !write_robot_status(r.get_battery_left()))
+    if(!write_output_header() || !write_step_count(r.get_total_steps()) || !write_dirt_count(h.get_total_dirt()) || !write_robot_status(r.get_battery_left()))
     {
         cout << "Unable to write to output due to I/O error." << endl;
         return -1;

@@ -4,10 +4,8 @@
 #include <iostream>
 #include <fstream> 
 #include <string>
-#include <utility>      /* To use pairs. Pairs will be of type <int, int> to represent coordinate of a particular location, relative to the charging dock.*/
+#include <utility>     
 #include "direction.h"
-
-using std::pair, std::string, std::ifstream;
 
 class Robot 
 {   
@@ -16,21 +14,19 @@ class Robot
     
     int steps;                               /* Total number of steps made by robot. */
     int battery_left;                        /* # of steps robot can take on current battery capacity. */
-    bool charging_status;                    /* True if charging, false if not. */
-    int charging_length;                     /* Amount of time robot has been on charging dock. */
-    pair<int, int> space;                    /* Current location of robot. */
+    std::pair<int, int> space;                    /* Current location of robot. */
 
 public:
     /* Constructor. */
     Robot();
 
     /* Calls private functions for instantiation of object fields. */
-    bool robot_setup(const string infile_name);
+    bool robot_setup(const std::string infile_name);
     
     /* Does not alter robot data. */
     int get_battery_left();
     int get_total_steps();
-    pair<int, int> get_robot_loc();
+    std::pair<int, int> get_robot_loc();
     bool on_charging_dock();
     bool budget_exceeded();
 
@@ -39,12 +35,7 @@ public:
 
 private:
     /* Reads input file to extract information about robot configurations. */
-    bool store_robot_info(ifstream& file);
-
-    /* Alter charging state information. */
-    void start_charge();
-    void charge();
-    void finished_charge();
+    bool store_robot_info(std::ifstream& file);
 };  
 
 #endif

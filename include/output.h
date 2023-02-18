@@ -1,15 +1,15 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-#include <utility>      /* To use pairs. Pairs will be of type <int, int> to represent coordinate of a particular location, relative to the charging dock.*/
+#include <utility> 
 #include "direction.h"
-
-using std::pair;
 
 #define OUTPUT_FILE "output.txt"
 
 /* Functions to record mission details. */
-bool write_step(const Direction dir, const pair<int, int> new_space);
+bool setup_output();
+bool write_output_header();
+bool write_step(const Direction dir, const std::pair<int, int> new_space);
 bool write_step_count(const int total_steps);
 bool write_dirt_count(const int total_dirt);
 bool write_robot_status(const int battery_left);
