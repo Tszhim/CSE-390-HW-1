@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 basic_test() {
     $(./bin/main "./tests/basic_test.txt")
 
