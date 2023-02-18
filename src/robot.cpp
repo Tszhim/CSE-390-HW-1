@@ -48,7 +48,7 @@ bool Robot::robot_setup(const string infile_name)
 bool Robot::store_robot_info(ifstream& file) 
 {   
     string str;
-    if (!getline(file, str))
+    if (!getline(file, str) || (str.find_first_not_of("1234567890") != string::npos))
         return false;
 
     try
@@ -58,9 +58,9 @@ bool Robot::store_robot_info(ifstream& file)
     catch (invalid_argument&) {return false;} 
     catch (out_of_range&) {return false;}
 
-    if (!getline(file, str))
+    if (!getline(file, str) || (str.find_first_not_of("1234567890") != string::npos))
         return false;
-    
+
     try 
     {
         mission_budget = stoi(str);
