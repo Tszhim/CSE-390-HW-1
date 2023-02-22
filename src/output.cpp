@@ -25,24 +25,10 @@ bool setup_output()
     return !out.fail();
 }
 
-/*
-    Separates the result output from the robot movement output. Return true if successful, otherwise false.
-*/
-bool write_output_header() 
-{
-    ofstream file = ofstream(OUTPUT_FILE, ios::app);
-    if(file.fail()) 
-        return false;
-    
-    file << "Results: " << endl;
-    file << "-----------------------" << endl;  
-    return true;
-}
-
 /* 
     Writes current step made by robot into output file. Return true if successful, otherwise false. 
 */
-bool write_step(const Direction dir, const pair<int, int> new_space) 
+bool write_step(const Direction dir, const pair<int, int> new_space, int battery_left) 
 {
     ofstream file = ofstream(OUTPUT_FILE, ios::app);
     if(file.fail()) 
@@ -60,10 +46,25 @@ bool write_step(const Direction dir, const pair<int, int> new_space)
         file << "Robot remained in place." << endl;
 
     file << "Robot now resides in space: " << new_space.first << "," << new_space.second << endl;
+    file << "Remaining battery: " << battery_left << endl << endl;
     return true;
 }
 
-/* 
+/*
+    Separates the result output from the robot movement output. Return true if successful, otherwise false.
+*/
+bool write_output_header() 
+{
+    ofstream file = ofstream(OUTPUT_FILE, ios::app);
+    if(file.fail()) 
+        return false;
+    
+    file << "Results: " << endl;
+    file << "-----------------------" << endl;  
+    return true;
+}
+
+/*  
     Writes total steps made by robot into output file. Return true if successful, otherwise false. 
 */
 bool write_step_count(const int total_steps) 

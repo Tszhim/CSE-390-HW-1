@@ -46,6 +46,8 @@ class Algorithm
     private:
         /* For internal use. */
         bool on_charging_dock();
+        Direction get_rand_dir();
+        void clear_path_stack();
 };
 
 #endif

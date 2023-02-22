@@ -71,13 +71,6 @@ int main(int argc, char* argv[])
         if(next_dir == Stasis)
             h.clean_space(r_loc);
 
-        /* Write calculated move into output file. */
-        if(!write_step(next_dir, r.get_robot_loc()))
-        {
-            cout << "Unable to write to output due to I/O error." << endl;
-            return -1;
-        }
-
         /* Check if house is fully cleaned AND robot is on charging port. If so, mission succeeded and break. */
         if(h.is_house_clean() && r.on_charging_dock())
         {
@@ -89,17 +82,24 @@ int main(int argc, char* argv[])
         if(r.budget_exceeded()) 
         {
             mission_success = false;
-            break;
+            break;  
+        }
+
+        /* Write next calculated move into output file. */
+        if(!write_step(next_dir, r.get_robot_loc(), r.get_battery_left()))
+        {
+            cout << "Unable to write to output due to I/O error." << endl;
+            return -1;
         }
     }   
 
-    /* print general logs */
+    /* Print general logs */
     if(!write_output_header() || !write_step_count(r.get_total_steps()) || !write_dirt_count(h.get_total_dirt()) || !write_robot_status(r.get_battery_left()))
     {
         cout << "Unable to write to output due to I/O error." << endl;
         return -1;
     }
-    /* print results msg based on success or failure of the mission */
+    /* Print results msg based on success or failure of the mission */
     if((mission_success && !write_mission_success()) || (!mission_success && !write_mission_failure()))
     {
         cout << "Unable to write to output due to I/O error." << endl;

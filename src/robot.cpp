@@ -136,10 +136,14 @@ void Robot::move(const Direction dir)
         space.first += 1;
     // Do nothing if stasis.
 
-    /* Check if new position is charging dock. If so, charge the robot. Charge cannot exceed max battery capacity. */
+    /* Check if new position is charging dock. If so, charge the robot. Charge cannot exceed max battery capacity.  */
     if(on_charging_dock())
     {
         new_battery = battery_left + (battery_size / 20);
         battery_left = (new_battery > battery_size) ? battery_size : new_battery;
+        return;
     }
+    /* Subtract battery if not charging. */
+    else 
+        battery_left--;
 }
